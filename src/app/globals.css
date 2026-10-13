@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-burgundy: #4a0d17;
+    --primary-burgundy-dark: #30060d;
+    --accent-gold: #c6922b;
+    --accent-gold-light: #dfc278;
+    --accent-gold-glow: #e8c97e;
+    --ivory-bg: #fdfbf7;
+    --ivory-card: #ffffff;
+    --ivory-border: #ede7dc;
+    --text-primary: #1c1917;
+    --text-muted: #57534e;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #dfc278 0%, #c6922b 50%, #f4e3b2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-gradient {
+  border-image: linear-gradient(to right, #dfc278, #c6922b, #dfc278) 1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fbf9f5;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4aa4f;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c6922b;
+}
