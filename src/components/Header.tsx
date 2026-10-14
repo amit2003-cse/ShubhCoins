@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Search, User, ShoppingBag, Menu, X, ArrowRight } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface HeaderProps {
   cartCount: number;
@@ -12,6 +14,7 @@ interface HeaderProps {
 
 export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, openAuthModal } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#EAE4D9] transition-all">
@@ -39,7 +42,7 @@ export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
             </div>
           </Link>
 
-          {/* Desktop Navigation - Minimalist & Centered */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-[#4A4540]">
             <Link
               href="/"
@@ -85,15 +88,30 @@ export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
               <Search className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
-            {/* Profile */}
-            <a
-              href="#account"
-              className="hidden sm:inline-flex p-2.5 text-[#4A0D17] hover:bg-[#F0EBE2] rounded-full transition-colors"
+            {/* Profile / Account with Google avatar */}
+            <button
+              onClick={openAuthModal}
+              className="flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 text-[#4A0D17] hover:bg-[#F0EBE2] rounded-full transition-colors"
               aria-label="Account"
-              title="Account"
+              title={user ? `Signed in as ${user.name}` : "Sign In with Google"}
             >
-              <User className="w-5 h-5" />
-            </a>
+              {user?.picture ? (
+                <div className="relative w-7 h-7 rounded-full overflow-hidden border border-[#C5A869]">
+                  <Image src={user.picture} alt={user.name} fill className="object-cover" />
+                </div>
+              ) : user ? (
+                <div className="w-7 h-7 rounded-full bg-[#4A0D17] text-[#DFC278] flex items-center justify-center text-xs font-bold">
+                  {user.name.charAt(0)}
+                </div>
+              ) : (
+                <User className="w-5 h-5" />
+              )}
+              {user && (
+                <span className="hidden lg:inline text-xs font-semibold text-[#1A1817]">
+                  {user.name.split(" ")[0]}
+                </span>
+              )}
+            </button>
 
             {/* Cart Trigger with Pill badge */}
             <button
@@ -159,6 +177,16 @@ export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
             >
               Help & FAQ
             </a>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openAuthModal();
+              }}
+              className="w-full flex items-center justify-between px-4 py-2.5 font-medium text-sm text-[#4A0D17] hover:bg-[#F0EBE2] rounded-xl text-left"
+            >
+              <span>{user ? `Account: ${user.name}` : "Sign In with Google"}</span>
+              <span className="text-xs text-[#9A7D3E]">{user ? "Profile" : "Sign In"}</span>
+            </button>
           </div>
         )}
       </div>

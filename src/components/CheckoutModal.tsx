@@ -12,6 +12,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { loadRazorpayScript } from "@/utils/razorpay";
+import { useAuth } from "@/context/AuthContext";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -26,6 +27,10 @@ export function CheckoutModal({
   totalAmount,
   onClearCart,
 }: CheckoutModalProps) {
+  const { user } = useAuth();
+  const customerName = user?.name || "Amit Kumar";
+  const customerEmail = user?.email || "amit4321sg@gmail.com";
+
   const [step, setStep] = useState<"address" | "payment" | "success">("address");
   const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "cod">("razorpay");
   const [isLoading, setIsLoading] = useState(false);
@@ -124,8 +129,8 @@ export function CheckoutModal({
         image: "/images/hero-coins.jpg",
         order_id: orderData.order_id,
         prefill: {
-          name: "Amit Kumar",
-          email: "amit4321sg@gmail.com",
+          name: customerName,
+          email: customerEmail,
           contact: "9876543210",
         },
         theme: {
@@ -242,7 +247,7 @@ export function CheckoutModal({
 
               <div className="p-4 rounded-2xl border-2 border-[#4A0D17] bg-white shadow-sm space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-sm text-[#1A1817]">Amit Kumar</span>
+                  <span className="font-bold text-sm text-[#1A1817]">{customerName}</span>
                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#4A0D17]/10 text-[#4A0D17]">
                     Default
                   </span>

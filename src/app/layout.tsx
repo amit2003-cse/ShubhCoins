@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { AuthModal } from "@/components/AuthModal";
 
 export const metadata: Metadata = {
   title: "ShubhCoins | Gift Prosperity - Premium Decorative Coins",
@@ -37,9 +39,20 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#FAF8F5] text-[#1A1817] font-sans antialiased selection:bg-[#C5A869]/20 selection:text-[#4A0D17]">
-        {children}
+        <AuthProvider>
+          {children}
+          <AuthModal />
+        </AuthProvider>
+
+        {/* Razorpay Checkout SDK */}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
+
+        {/* Google Identity Services SDK */}
+        <Script
+          src="https://accounts.google.com/gsi/client"
           strategy="lazyOnload"
         />
       </body>
