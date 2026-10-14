@@ -96,8 +96,13 @@ export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
               title={user ? `Signed in as ${user.name}` : "Sign In with Google"}
             >
               {user?.picture ? (
-                <div className="relative w-7 h-7 rounded-full overflow-hidden border border-[#C5A869]">
-                  <Image src={user.picture} alt={user.name} fill className="object-cover" />
+                <div className="w-7 h-7 rounded-full overflow-hidden border border-[#C5A869]">
+                  <img
+                    src={user.picture}
+                    alt={user.name}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               ) : user ? (
                 <div className="w-7 h-7 rounded-full bg-[#4A0D17] text-[#DFC278] flex items-center justify-center text-xs font-bold">

@@ -92,11 +92,11 @@ export function AuthModal() {
             <div className="text-center py-4 space-y-5">
               <div className="relative w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-[#C5A869] shadow-md bg-stone-100 flex items-center justify-center">
                 {user.picture ? (
-                  <Image
+                  <img
                     src={user.picture}
                     alt={user.name}
-                    fill
-                    className="object-cover"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <span className="font-serif text-2xl font-bold text-[#4A0D17]">
