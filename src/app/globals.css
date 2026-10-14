@@ -1,64 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --primary-burgundy: #4a0d17;
-  --primary-burgundy-dark: #30060d;
-  --accent-gold: #c6922b;
-  --accent-gold-light: #dfc278;
-  --accent-gold-glow: #e8c97e;
-  --ivory-bg: #fdfbf7;
-  --ivory-card: #ffffff;
-  --ivory-border: #ede7dc;
-  --text-primary: #1c1917;
-  --text-muted: #57534e;
+  --color-burgundy: #4a0d17;
+  --color-burgundy-dark: #32080f;
+  --color-gold: #c5a869;
+  --color-gold-light: #e8d9b5;
+  --color-gold-dark: #9a7d3e;
+  --color-ivory: #faf8f5;
+  --color-card: #ffffff;
+  --color-border: #eae4d9;
+  --color-border-subtle: #f0ebe2;
+  --color-text-main: #1a1817;
+  --color-text-muted: #6b6661;
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: #fdfbf7;
-  color: #1c1917;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-ivory);
+  color: var(--color-text-main);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .font-serif {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
 }
 
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.04);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
-}
-
-.gold-gradient-text {
-  background: linear-gradient(135deg, #dfc278 0%, #c6922b 50%, #f4e3b2 100%);
+/* Subtle gold shimmer */
+.gold-shimmer {
+  background: linear-gradient(135deg, #dfc278 0%, #c5a869 50%, #f3e5c8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-border-gradient {
-  border-image: linear-gradient(to right, #dfc278, #c6922b, #dfc278) 1;
+/* Minimalist delicate card hover */
+.minimal-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.minimal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -10px rgba(74, 13, 23, 0.08);
 }
 
-/* Custom scrollbar */
+/* Smooth custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fbf9f5;
+  background: #faf8f5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d4aa4f;
-  border-radius: 4px;
+  background: #dcd3c4;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c6922b;
+  background: #c5a869;
 }

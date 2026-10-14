@@ -33,27 +33,27 @@ export function ProductDetailModal({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div className="flex min-h-full items-center justify-center p-3 sm:p-6 text-center">
         {/* Backdrop */}
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         />
 
-        {/* Modal Container matching Screen 3 in screenshot */}
-        <div className="relative transform overflow-hidden rounded-3xl bg-[#FDFBF7] text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-3xl border border-[#EDE7DC]">
+        {/* Modal Window */}
+        <div className="relative transform overflow-hidden rounded-3xl bg-[#FAF8F5] text-left shadow-2xl transition-all w-full max-w-2xl border border-[#EAE4D9]">
           {/* Close button */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 z-10 p-2 text-stone-400 hover:text-stone-800 bg-white/80 rounded-full shadow-sm"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
 
           <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Product Image Column */}
-            <div className="relative bg-[#FAF7F2] p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-[#EDE7DC]">
-              <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg border border-[#EDE7DC]">
+            <div className="relative bg-[#F5F2EB] p-6 sm:p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-[#EAE4D9]">
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-sm border border-[#EAE4D9]">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -62,9 +62,8 @@ export function ProductDetailModal({
                 />
               </div>
 
-              {/* Thumbnail Gallery indicators */}
-              <div className="flex gap-2 mt-4">
-                <div className="w-12 h-12 rounded-lg border-2 border-[#C6922B] overflow-hidden relative">
+              <div className="flex gap-2 mt-3">
+                <div className="w-10 h-10 rounded-lg border-2 border-[#C5A869] overflow-hidden relative">
                   <Image
                     src={product.image}
                     alt="Thumbnail 1"
@@ -72,7 +71,7 @@ export function ProductDetailModal({
                     className="object-cover"
                   />
                 </div>
-                <div className="w-12 h-12 rounded-lg border border-[#EDE7DC] overflow-hidden relative opacity-75">
+                <div className="w-10 h-10 rounded-lg border border-[#EAE4D9] overflow-hidden relative opacity-70">
                   <Image
                     src="/images/hero-coins.jpg"
                     alt="Thumbnail 2"
@@ -83,78 +82,78 @@ export function ProductDetailModal({
               </div>
             </div>
 
-            {/* Product Details Column */}
-            <div className="p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            {/* Details Column */}
+            <div className="p-5 sm:p-7 flex flex-col justify-between space-y-5">
               <div>
-                <div className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-2">
-                  ● In Stock (Ready to Ship)
-                </div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917]">
+                <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold mb-1.5">
+                  ● Ready to Ship (In Stock)
+                </span>
+                <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1A1817]">
                   {product.name}
                 </h2>
-                <p className="text-xs text-[#78716C] mt-1 font-medium">
+                <p className="text-xs text-[#6B6661] mt-0.5 font-medium">
                   {product.tagline}
                 </p>
 
                 {/* Price */}
-                <div className="flex items-baseline gap-3 mt-4">
-                  <span className="font-serif text-3xl font-bold text-[#881B2E]">
+                <div className="flex items-baseline gap-2 mt-3">
+                  <span className="font-serif text-2xl font-bold text-[#4A0D17]">
                     ₹{product.price}
                   </span>
-                  <span className="text-sm text-[#A8A29E] line-through">
+                  <span className="text-xs text-[#A8A29E] line-through">
                     ₹{product.originalPrice}
                   </span>
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded">
                     Save 50%
                   </span>
                 </div>
 
-                {/* Bullet Highlights matching screen 3 */}
-                <div className="mt-5 space-y-2.5 text-xs text-[#44403C]">
+                {/* Features */}
+                <div className="mt-4 space-y-2 text-xs text-[#4A4540]">
                   <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-[#C6922B]" />
-                    <span>{product.finish === "gold" ? "24K Gold-Tone Mirror Plating" : "Sterling Silver-Tone Luster"}</span>
+                    <Award className="w-3.5 h-3.5 text-[#C5A869]" />
+                    <span>{product.finish === "gold" ? "24K Gold-Tone Mirror Finish" : "Sterling Silver-Tone Luster"}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#C6922B]" />
-                    <span>Premium Velvet Gift Box Included</span>
+                    <Check className="w-3.5 h-3.5 text-[#C5A869]" />
+                    <span>Royal Velvet Presentation Box Included</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#C6922B]" />
-                    <span>Plain Mirror Face — Zero Deity Engravings</span>
+                    <Check className="w-3.5 h-3.5 text-[#C5A869]" />
+                    <span>Plain Mirror Surface (Zero Deity Engravings)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#C6922B]" />
-                    <span>Secure Packaging & Tamper-Proof Seal</span>
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#C5A869]" />
+                    <span>Tamper-Proof Packaging</span>
                   </div>
                 </div>
 
                 {/* Quantity and Add to Cart */}
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="flex items-center border border-[#EDE7DC] rounded-xl bg-white">
+                <div className="mt-5 flex items-center gap-2.5">
+                  <div className="flex items-center border border-[#EAE4D9] rounded-xl bg-white">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="p-2.5 text-stone-500 hover:text-stone-900"
+                      className="p-2 text-stone-500 hover:text-stone-900"
                     >
-                      <Minus className="w-4 h-4" />
+                      <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="px-3 text-sm font-bold text-[#1C1917]">
+                    <span className="px-2.5 text-xs font-bold text-[#1A1817]">
                       {quantity}
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="p-2.5 text-stone-500 hover:text-stone-900"
+                      className="p-2 text-stone-500 hover:text-stone-900"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   <button
                     onClick={handleAdd}
-                    className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md ${
+                    className={`flex-1 py-2.5 px-5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm ${
                       isAdded
                         ? "bg-emerald-600 text-white"
-                        : "bg-[#881B2E] hover:bg-[#661220] text-white active:scale-95"
+                        : "bg-[#4A0D17] hover:bg-[#32080F] text-white active:scale-95"
                     }`}
                   >
                     {isAdded ? (
@@ -172,14 +171,14 @@ export function ProductDetailModal({
                 </div>
               </div>
 
-              {/* Tabs: Description vs Specifications */}
-              <div className="border-t border-[#EDE7DC] pt-4">
-                <div className="flex border-b border-[#EDE7DC]">
+              {/* Tabs */}
+              <div className="border-t border-[#EAE4D9] pt-3">
+                <div className="flex border-b border-[#EAE4D9] text-xs">
                   <button
                     onClick={() => setActiveTab("desc")}
-                    className={`pb-2 text-xs font-bold transition-colors ${
+                    className={`pb-1.5 font-bold transition-colors ${
                       activeTab === "desc"
-                        ? "border-b-2 border-[#881B2E] text-[#881B2E]"
+                        ? "border-b-2 border-[#4A0D17] text-[#4A0D17]"
                         : "text-stone-500 hover:text-stone-800"
                     }`}
                   >
@@ -187,9 +186,9 @@ export function ProductDetailModal({
                   </button>
                   <button
                     onClick={() => setActiveTab("specs")}
-                    className={`pb-2 ml-6 text-xs font-bold transition-colors ${
+                    className={`pb-1.5 ml-4 font-bold transition-colors ${
                       activeTab === "specs"
-                        ? "border-b-2 border-[#881B2E] text-[#881B2E]"
+                        ? "border-b-2 border-[#4A0D17] text-[#4A0D17]"
                         : "text-stone-500 hover:text-stone-800"
                     }`}
                   >
@@ -197,29 +196,27 @@ export function ProductDetailModal({
                   </button>
                 </div>
 
-                <div className="pt-3 text-xs text-[#57534E] leading-relaxed">
+                <div className="pt-2 text-xs text-[#6B6661] leading-relaxed">
                   {activeTab === "desc" ? (
                     <p>{product.description}</p>
                   ) : (
-                    <div className="space-y-1.5">
+                    <div className="space-y-1">
                       <p><strong>Diameter:</strong> {product.specifications.diameter}</p>
                       <p><strong>Thickness:</strong> {product.specifications.thickness}</p>
                       <p><strong>Core Metal:</strong> {product.specifications.coreMaterial}</p>
                       <p><strong>Finish:</strong> {product.specifications.finishType}</p>
-                      <p><strong>Engraving:</strong> {product.specifications.engraving}</p>
                     </div>
                   )}
                 </div>
 
-                {/* Trust mini-strip at bottom */}
-                <div className="grid grid-cols-2 gap-2 pt-4 mt-2 border-t border-[#EDE7DC]/60 text-[11px] text-[#78716C]">
-                  <div className="flex items-center gap-1.5">
-                    <RotateCcw className="w-3.5 h-3.5 text-[#C6922B]" />
+                <div className="grid grid-cols-2 gap-2 pt-3 mt-2 border-t border-[#F0EBE2] text-[10px] text-[#6B6661]">
+                  <div className="flex items-center gap-1">
+                    <RotateCcw className="w-3 h-3 text-[#9A7D3E]" />
                     <span>7-Day Return Policy</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Truck className="w-3.5 h-3.5 text-[#C6922B]" />
-                    <span>Cash on Delivery Available</span>
+                  <div className="flex items-center gap-1">
+                    <Truck className="w-3 h-3 text-[#9A7D3E]" />
+                    <span>Cash on Delivery</span>
                   </div>
                 </div>
               </div>

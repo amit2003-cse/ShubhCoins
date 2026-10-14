@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Product } from "@/types";
-import { ArrowRight, ShoppingBag, Eye, Check, Sparkles } from "lucide-react";
+import { ArrowRight, ShoppingBag, Eye, Check } from "lucide-react";
 
 interface FeaturedCollectionProps {
   products: Product[];
@@ -26,142 +26,133 @@ export function FeaturedCollection({
   };
 
   return (
-    <section id="collection" className="py-16 sm:py-20 bg-[#FDFBF7]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5EED3] text-[#996515] text-xs font-semibold tracking-wider uppercase">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Handcrafted Festive Editions</span>
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#4A0D17] tracking-tight">
-            Our Collection
-          </h2>
-          <p className="text-sm sm:text-base text-[#57534E] leading-relaxed">
-            Minimalist, plain mirror-finish decorative coins in luxury gift cases. 
-            Designed with zero deity engravings for versatile and auspicious Indian festive gifting.
-          </p>
-        </div>
+    <section id="collection" className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Section Header */}
+      <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14 space-y-2.5">
+        <span className="text-[11px] font-bold tracking-widest text-[#9A7D3E] uppercase bg-[#FAF8F5] px-3 py-1 rounded-full border border-[#EAE4D9]">
+          The Core Collection
+        </span>
+        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#4A0D17]">
+          Our Collection
+        </h2>
+        <p className="text-xs sm:text-sm text-[#6B6661] leading-relaxed">
+          Clean, mirror-polished decorative keepsake coins with zero deity engravings. 
+          Universal gifts designed to celebrate prosperity and warmth.
+        </p>
+      </div>
 
-        {/* Product Cards Grid matching the screenshot */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
-          {products.map((product) => {
-            const isAdded = addedId === product.id;
+      {/* Responsive 2-Card Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
+        {products.map((product) => {
+          const isAdded = addedId === product.id;
 
-            return (
+          return (
+            <div
+              key={product.id}
+              className="minimal-card bg-white rounded-3xl overflow-hidden border border-[#EAE4D9] flex flex-col justify-between"
+            >
+              {/* Product Image */}
               <div
-                key={product.id}
-                className="group bg-white rounded-2xl overflow-hidden border border-[#EDE7DC] shadow-sm hover:shadow-xl hover:border-[#DFC278]/60 transition-all duration-300 flex flex-col"
+                onClick={() => onSelectProduct(product)}
+                className="relative aspect-square sm:aspect-[4/3] bg-[#FAF8F5] overflow-hidden cursor-pointer group"
               >
-                {/* Image Container */}
-                <div
-                  onClick={() => onSelectProduct(product)}
-                  className="relative aspect-square sm:aspect-[4/3] bg-[#FAF7F2] overflow-hidden cursor-pointer"
-                >
-                  <Image
-                    src={product.image}
-                    alt={`${product.name} decorative metallic coin in velvet presentation box`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 500px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                  />
+                <Image
+                  src={product.image}
+                  alt={`${product.name} decorative metallic coin in gift box`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 450px"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
 
-                  {/* Badge */}
-                  {product.badge && (
-                    <div className="absolute top-4 left-4 bg-[#881B2E] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm tracking-wide">
-                      {product.badge}
+                {/* Badge */}
+                {product.badge && (
+                  <div className="absolute top-4 left-4 bg-[#4A0D17] text-white text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm">
+                    {product.badge}
+                  </div>
+                )}
+
+                {/* Plain coin disclosure */}
+                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] px-2.5 py-1 rounded-lg">
+                  Decorative metal • Non-solid
+                </div>
+
+                {/* Quick view button on hover */}
+                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="px-4 py-2 rounded-full bg-white text-[#4A0D17] text-xs font-semibold shadow-md flex items-center gap-1.5">
+                    <Eye className="w-4 h-4" />
+                    <span>Quick View</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-5 sm:p-7 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1A1817]">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs font-medium text-[#9A7D3E] italic">
+                    {product.tagline}
+                  </p>
+                  <p className="text-xs text-[#6B6661] leading-relaxed line-clamp-2 pt-1">
+                    {product.description}
+                  </p>
+                </div>
+
+                {/* Price and Actions Row */}
+                <div className="pt-4 border-t border-[#F0EBE2] flex items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-serif text-2xl sm:text-3xl font-bold text-[#4A0D17]">
+                        ₹{product.price}
+                      </span>
+                      <span className="text-xs text-[#A8A29E] line-through font-normal">
+                        ₹{product.originalPrice}
+                      </span>
                     </div>
-                  )}
-
-                  {/* Disclosure Tag */}
-                  <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white/90 text-[11px] px-2.5 py-1 rounded-md">
-                    Non-solid decorative finish
+                    <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                      In Stock • Save 50%
+                    </span>
                   </div>
 
-                  {/* Hover Quick Action overlay */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                  <div className="flex items-center gap-2">
+                    {/* Add to Cart Button */}
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectProduct(product);
-                      }}
-                      className="p-3 bg-white text-[#4A0D17] rounded-full shadow-lg hover:bg-[#DFC278] transition-colors"
-                      title="Quick View"
+                      onClick={(e) => handleAdd(product, e)}
+                      className={`p-2.5 sm:px-3 sm:py-2.5 rounded-xl border border-[#EAE4D9] text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        isAdded
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "hover:bg-[#FAF8F5] text-[#4A0D17] hover:border-[#C5A869]"
+                      }`}
+                      title="Add to cart"
                     >
-                      <Eye className="w-5 h-5" />
+                      {isAdded ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Added</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Add</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* View Details Button */}
+                    <button
+                      onClick={() => onSelectProduct(product)}
+                      className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#E8D9B5] hover:bg-[#DFC278] active:scale-95 text-[#2D060D] text-xs sm:text-sm font-bold shadow-sm transition-all"
+                    >
+                      <span>View Details</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
-
-                {/* Content Container */}
-                <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between space-y-5">
-                  <div className="space-y-2">
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1C1917] group-hover:text-[#4A0D17] transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm font-medium text-[#78716C] italic">
-                      {product.tagline}
-                    </p>
-                    <p className="text-xs text-[#57534E] line-clamp-2 leading-relaxed pt-1">
-                      {product.description}
-                    </p>
-                  </div>
-
-                  {/* Price & Action Row */}
-                  <div className="pt-4 border-t border-[#EDE7DC] flex items-center justify-between gap-4">
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-2xl sm:text-3xl font-bold text-[#881B2E] font-serif">
-                          ₹{product.price}
-                        </span>
-                        <span className="text-sm text-[#A8A29E] line-through font-normal">
-                          ₹{product.originalPrice}
-                        </span>
-                      </div>
-                      <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                        50% Off • In Stock
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      {/* Direct Add to Cart */}
-                      <button
-                        onClick={(e) => handleAdd(product, e)}
-                        className={`p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl border border-[#EDE7DC] text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                          isAdded
-                            ? "bg-emerald-600 text-white border-emerald-600"
-                            : "hover:bg-[#FAF7F2] text-[#4A0D17] hover:border-[#DFC278]"
-                        }`}
-                        title="Add to cart"
-                      >
-                        {isAdded ? (
-                          <>
-                            <Check className="w-4 h-4" />
-                            <span className="hidden sm:inline">Added</span>
-                          </>
-                        ) : (
-                          <>
-                            <ShoppingBag className="w-4 h-4" />
-                            <span className="hidden sm:inline">Add</span>
-                          </>
-                        )}
-                      </button>
-
-                      {/* View Details Button matching Screenshot */}
-                      <button
-                        onClick={() => onSelectProduct(product)}
-                        className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#E8C97E] hover:bg-[#DFC278] active:scale-95 text-[#30060D] text-xs sm:text-sm font-bold shadow-sm transition-all"
-                      >
-                        <span>View Details</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
