@@ -13,6 +13,14 @@
     --text-primary: #1c1917;
     --text-muted: #57534e;
   }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  .font-serif {
+    font-family: 'Cinzel', Georgia, serif;
+  }
 }
 
 @keyframes pulseGlow {
