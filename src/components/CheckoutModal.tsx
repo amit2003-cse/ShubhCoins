@@ -44,13 +44,36 @@ export function CheckoutModal({
 
     // If Cash On Delivery
     if (paymentMethod === "cod") {
-      const generatedOrderId = `SC_COD_${Date.now().toString().slice(-6)}`;
-      setConfirmedOrder({
-        orderId: generatedOrderId,
-        method: "Cash on Delivery (COD)",
-      });
-      setStep("success");
-      onClearCart();
+      try {
+        setIsLoading(true);
+        const generatedOrderId = `SC_COD_${Date.now().toString().slice(-6)}`;
+        await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: generatedOrderId,
+            amount: totalAmount,
+            paymentMethod: "cod",
+            customer: {
+              name: "Amit Kumar",
+              email: "amit4321sg@gmail.com",
+              phone: "9876543210",
+              address: "123, Main Street, Hyderabad, Telangana - 500001",
+            },
+          }),
+        });
+
+        setConfirmedOrder({
+          orderId: generatedOrderId,
+          method: "Cash on Delivery (COD)",
+        });
+        setStep("success");
+        onClearCart();
+      } catch (e) {
+        console.warn("Could not save COD order to DB:", e);
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
 

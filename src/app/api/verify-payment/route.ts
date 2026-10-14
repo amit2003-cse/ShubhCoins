@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { connectToDatabase } from "@/lib/mongodb";
+import { Order } from "@/models/Order";
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,7 +48,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Success
+    // Update order status in MongoDB
+    try {
+      await connectToDatabase();
+      await Order.findOneAndUpdate(
+        { razorpayOrderId: razorpay_order_id },
+        {
+          status: "paid",
+          razorpayPaymentId: razorpay_payment_id,
+          razorpaySignature: razorpay_signature,
+        },
+        { new: true }
+      );
+    } catch (dbErr) {
+      console.warn("MongoDB order update error (non-fatal):", dbErr);
+    }
+
+    // Success response
     return NextResponse.json({
       success: true,
       verified: true,
