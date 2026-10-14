@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -35,8 +36,12 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[#FDFBF7] text-[#1C1917] font-sans antialiased selection:bg-[#C6922B]/20 selection:text-[#4A0D17]">
+      <body className="min-h-screen bg-[#FAF8F5] text-[#1A1817] font-sans antialiased selection:bg-[#C5A869]/20 selection:text-[#4A0D17]">
         {children}
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
