@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --primary-burgundy: #4a0d17;
-    --primary-burgundy-dark: #30060d;
-    --accent-gold: #c6922b;
-    --accent-gold-light: #dfc278;
-    --accent-gold-glow: #e8c97e;
-    --ivory-bg: #fdfbf7;
-    --ivory-card: #ffffff;
-    --ivory-border: #ede7dc;
-    --text-primary: #1c1917;
-    --text-muted: #57534e;
-  }
+:root {
+  --primary-burgundy: #4a0d17;
+  --primary-burgundy-dark: #30060d;
+  --accent-gold: #c6922b;
+  --accent-gold-light: #dfc278;
+  --accent-gold-glow: #e8c97e;
+  --ivory-bg: #fdfbf7;
+  --ivory-card: #ffffff;
+  --ivory-border: #ede7dc;
+  --text-primary: #1c1917;
+  --text-muted: #57534e;
+}
 
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #fdfbf7;
+  color: #1c1917;
+}
 
-  .font-serif {
-    font-family: 'Cinzel', Georgia, serif;
-  }
+.font-serif {
+  font-family: 'Cinzel', Georgia, serif;
 }
 
 @keyframes pulseGlow {
@@ -31,12 +31,6 @@
   50% {
     opacity: 0.9;
     transform: scale(1.04);
-  }
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
   }
 }
 
