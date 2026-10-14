@@ -38,29 +38,43 @@ export async function POST(req: NextRequest) {
     }
 
     const { sub: googleId, name, email, picture } = payload;
+    const userName = name || email.split("@")[0];
+    const userEmail = email.toLowerCase();
+    const userPicture = picture || "";
 
-    // Connect to MongoDB and upsert user
-    await connectToDatabase();
+    let dbUserId = googleId;
 
-    const user = await User.findOneAndUpdate(
-      { googleId },
-      {
-        googleId,
-        name: name || email.split("@")[0],
-        email: email.toLowerCase(),
-        picture: picture || "",
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    // Connect to MongoDB and upsert user record
+    try {
+      await connectToDatabase();
 
+      const user = await User.findOneAndUpdate(
+        { googleId },
+        {
+          googleId,
+          name: userName,
+          email: userEmail,
+          picture: userPicture,
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+
+      if (user?._id) {
+        dbUserId = user._id.toString();
+      }
+    } catch (dbError) {
+      console.warn("MongoDB user upsert error (fallback to verified Google session):", dbError);
+    }
+
+    // Always succeed when Google ID token is valid
     return NextResponse.json({
       success: true,
       user: {
-        id: user._id.toString(),
-        googleId: user.googleId,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
+        id: dbUserId,
+        googleId,
+        name: userName,
+        email: userEmail,
+        picture: userPicture,
       },
     });
   } catch (error: any) {

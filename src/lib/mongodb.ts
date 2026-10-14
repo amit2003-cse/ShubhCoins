@@ -21,10 +21,14 @@ if (!global.mongooseCache) {
   global.mongooseCache = cached;
 }
 
-export async function connectToDatabase(): Promise<typeof mongoose | null> {
+export async function connectToDatabase(): Promise<typeof mongoose> {
   if (!MONGODB_URI) {
-    console.warn("MONGODB_URI is not defined in environment variables");
-    return null;
+    throw new Error("MONGODB_URI is not defined in environment variables");
+  }
+
+  // Already connected
+  if (mongoose.connection.readyState === 1) {
+    return mongoose;
   }
 
   if (cached.conn) {
@@ -32,18 +36,17 @@ export async function connectToDatabase(): Promise<typeof mongoose | null> {
   }
 
   if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
+    // Enable bufferCommands so queries wait for connection instead of throwing
     cached.promise = mongoose
-      .connect(MONGODB_URI, opts)
+      .connect(MONGODB_URI, {
+        bufferCommands: true,
+      })
       .then((mongooseInstance) => {
         console.log("Connected to MongoDB successfully");
         return mongooseInstance;
       })
       .catch((err) => {
-        console.error("MongoDB connection error:", err);
+        console.error("MongoDB connection failed:", err);
         cached.promise = null;
         throw err;
       });
@@ -54,6 +57,6 @@ export async function connectToDatabase(): Promise<typeof mongoose | null> {
     return cached.conn;
   } catch (e) {
     cached.promise = null;
-    return null;
+    throw e;
   }
 }
