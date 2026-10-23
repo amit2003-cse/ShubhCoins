@@ -74,6 +74,12 @@ export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
             >
               Help & FAQ
             </a>
+            <Link
+              href="/track-order"
+              className="hover:text-[#4A0D17] transition-colors relative py-1 font-semibold text-[#9A7D3E]"
+            >
+              Track Order
+            </Link>
           </nav>
 
           {/* Right Action Icons */}
@@ -182,6 +188,14 @@ export function Header({ cartCount, onOpenCart, onOpenSearch }: HeaderProps) {
             >
               Help & FAQ
             </a>
+            <Link
+              href="/track-order"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-4 py-2.5 font-semibold text-sm text-[#9A7D3E] hover:bg-[#F0EBE2] rounded-xl"
+            >
+              <span>Track Order</span>
+              <span className="text-xs bg-[#DFC278]/20 text-[#4A0D17] px-2 py-0.5 rounded-full font-bold">Live Status</span>
+            </Link>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);

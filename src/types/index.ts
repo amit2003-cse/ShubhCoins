@@ -22,3 +22,25 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+export interface ShippingAddress {
+  fullName: string;
+  phone: string;
+  email: string;
+  addressLine1: string;
+  addressLine2?: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  giftMessage?: string;
+}
+
+export interface OrderItem {
+  productId: string;
+  name: string;
+  finish: "gold" | "silver";
+  price: number;
+  quantity: number;
+  image: string;
+}

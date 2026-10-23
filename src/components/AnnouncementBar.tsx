@@ -31,8 +31,9 @@ export function AnnouncementBar() {
         <div className="hidden sm:flex items-center gap-1.5 text-[11px]">
           <span className="text-[#FAF8F5]/70">Use Code:</span>
           <span className="font-mono font-bold text-[#DFC278] tracking-wider bg-white/10 px-2 py-0.5 rounded border border-[#DFC278]/30">
-            SHUBH2024
+            NEWSHUBH
           </span>
+          <span className="text-[10px] text-emerald-400 font-bold ml-1">10% OFF</span>
         </div>
       </div>
     </div>

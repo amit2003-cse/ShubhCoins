@@ -54,6 +54,19 @@ export async function POST(req: NextRequest) {
     // Persist pending order to MongoDB
     try {
       await connectToDatabase();
+      const customer = body.customer || {
+        name: "Guest Customer",
+        email: "customer@example.com",
+        phone: "9999999999",
+        addressLine1: "Address",
+        city: "City",
+        state: "State",
+        pincode: "110001",
+      };
+
+      const fullAddress = customer.fullAddress || 
+        `${customer.addressLine1}${customer.addressLine2 ? ', ' + customer.addressLine2 : ''}${customer.landmark ? ', Near ' + customer.landmark : ''}, ${customer.city}, ${customer.state} - ${customer.pincode}`;
+
       await Order.create({
         orderId: receipt,
         razorpayOrderId: order.id,
@@ -61,11 +74,10 @@ export async function POST(req: NextRequest) {
         currency: order.currency,
         paymentMethod: "razorpay",
         status: "pending",
-        customer: body.customer || {
-          name: "Amit Kumar",
-          email: "amit4321sg@gmail.com",
-          phone: "9876543210",
-          address: "123, Main Street, Hyderabad, Telangana - 500001",
+        items: body.items || [],
+        customer: {
+          ...customer,
+          fullAddress,
         },
       });
     } catch (dbErr) {

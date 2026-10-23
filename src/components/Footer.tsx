@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Mail, Phone, MapPin, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, ChevronUp, Mail, Phone, MapPin, ShieldCheck, Truck } from "lucide-react";
 
 export function Footer() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -103,6 +104,7 @@ export function Footer() {
               Quick Links
             </h4>
             <ul className="space-y-1.5">
+              <li><Link href="/track-order" className="text-[#DFC278] hover:underline font-semibold flex items-center gap-1.5"><Truck className="w-3.5 h-3.5" /><span>Track Live Order</span></Link></li>
               <li><a href="#collection" className="hover:text-white transition-colors">Gold Plated Coin (₹499)</a></li>
               <li><a href="#collection" className="hover:text-white transition-colors">Silver Plated Coin (₹349)</a></li>
               <li><a href="#story" className="hover:text-white transition-colors">Brand Story</a></li>
@@ -116,10 +118,11 @@ export function Footer() {
               Customer Policies
             </h4>
             <ul className="space-y-1.5">
-              <li><a href="#faq" className="hover:text-white transition-colors">7-Day Return Policy</a></li>
-              <li><a href="#faq" className="hover:text-white transition-colors">Pan-India Express Shipping</a></li>
-              <li><a href="#faq" className="hover:text-white transition-colors">Cash on Delivery (COD)</a></li>
-              <li><a href="#faq" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><Link href="/refund-policy" className="hover:text-white transition-colors">7-Day Return Policy</Link></li>
+              <li><Link href="/shipping-policy" className="hover:text-white transition-colors">Pan-India Express Shipping</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">Help & Contact Desk</Link></li>
             </ul>
           </div>
 
@@ -135,7 +138,9 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-[#DFC278] shrink-0" />
-                <span>+91 98765 43210</span>
+                <a href="tel:+917488574616" className="hover:text-white transition-colors">
+                  +91 74885 74616
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#DFC278] shrink-0" />

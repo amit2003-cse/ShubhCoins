@@ -60,12 +60,40 @@ export default function HomePage() {
     setCartItems([]);
   };
 
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discountPercent: number;
+  } | null>(null);
+
+  const handleApplyCoupon = (code: string) => {
+    const clean = code.trim().toUpperCase();
+    if (clean === "NEWSHUBH" || clean === "SHUBH2024") {
+      setAppliedCoupon({ code: clean, discountPercent: 10 });
+      return {
+        success: true,
+        message: "Code NEWSHUBH applied! 10% festive discount activated.",
+      };
+    }
+    return {
+      success: false,
+      message: "Invalid code. Use code NEWSHUBH to get 10% off!",
+    };
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+  };
+
   const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const totalAmount = subtotal > 0 ? subtotal + 50 : 0;
+  const discountAmount = appliedCoupon
+    ? Math.round(subtotal * (appliedCoupon.discountPercent / 100))
+    : 0;
+  const shipping = subtotal > 0 ? 50 : 0;
+  const totalAmount = subtotal > 0 ? Math.max(0, subtotal - discountAmount + shipping) : 0;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FDFBF7] text-[#1C1917]">
@@ -120,6 +148,10 @@ export default function HomePage() {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         items={cartItems}
+        appliedCoupon={appliedCoupon}
+        discountAmount={discountAmount}
+        onApplyCoupon={handleApplyCoupon}
+        onRemoveCoupon={handleRemoveCoupon}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
         onCheckout={() => {
@@ -143,11 +175,14 @@ export default function HomePage() {
         onSelectProduct={(product) => setSelectedProduct(product)}
       />
 
-      {/* Checkout Simulation Modal */}
+      {/* Checkout Modal */}
       <CheckoutModal
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
+        items={cartItems}
         totalAmount={totalAmount}
+        discountAmount={discountAmount}
+        appliedCoupon={appliedCoupon?.code}
         onClearCart={handleClearCart}
       />
     </div>

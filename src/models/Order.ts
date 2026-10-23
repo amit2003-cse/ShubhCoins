@@ -1,5 +1,28 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
+export interface IOrderItem {
+  productId: string;
+  name: string;
+  finish?: "gold" | "silver";
+  price: number;
+  quantity: number;
+  image?: string;
+}
+
+export interface ICustomer {
+  name: string;
+  email: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  fullAddress?: string;
+  giftMessage?: string;
+}
+
 export interface IOrder extends Document {
   orderId: string;
   razorpayOrderId?: string;
@@ -8,16 +31,41 @@ export interface IOrder extends Document {
   amount: number;
   currency: string;
   paymentMethod: "razorpay" | "cod";
-  status: "pending" | "paid" | "failed";
-  customer: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-  };
+  status: "pending" | "paid" | "failed" | "confirmed" | "shipped" | "delivered";
+  items: IOrderItem[];
+  customer: ICustomer;
   createdAt: Date;
   updatedAt: Date;
 }
+
+const OrderItemSchema = new Schema<IOrderItem>(
+  {
+    productId: { type: String, required: true },
+    name: { type: String, required: true },
+    finish: { type: String, enum: ["gold", "silver"] },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true, default: 1 },
+    image: { type: String },
+  },
+  { _id: false }
+);
+
+const CustomerSchema = new Schema<ICustomer>(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    addressLine1: { type: String, required: true },
+    addressLine2: { type: String },
+    landmark: { type: String },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true },
+    fullAddress: { type: String },
+    giftMessage: { type: String },
+  },
+  { _id: false }
+);
 
 const OrderSchema: Schema<IOrder> = new Schema(
   {
@@ -52,17 +100,16 @@ const OrderSchema: Schema<IOrder> = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "paid", "failed"],
+      enum: ["pending", "paid", "failed", "confirmed", "shipped", "delivered"],
       default: "pending",
     },
+    items: {
+      type: [OrderItemSchema],
+      default: [],
+    },
     customer: {
-      name: { type: String, default: "Amit Kumar" },
-      email: { type: String, default: "amit4321sg@gmail.com" },
-      phone: { type: String, default: "9876543210" },
-      address: {
-        type: String,
-        default: "123, Main Street, Hyderabad, Telangana - 500001",
-      },
+      type: CustomerSchema,
+      required: true,
     },
   },
   {

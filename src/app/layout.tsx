@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { AuthModal } from "@/components/AuthModal";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const metadata: Metadata = {
   title: "ShubhCoins | Gift Prosperity - Premium Decorative Coins",
@@ -42,6 +43,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <AuthModal />
+          <WhatsAppButton />
         </AuthProvider>
 
         {/* Razorpay Checkout SDK */}

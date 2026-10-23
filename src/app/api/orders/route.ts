@@ -11,17 +11,29 @@ export async function POST(req: NextRequest) {
     const orderId =
       body.orderId || `SC_COD_${Date.now().toString().slice(-6)}`;
 
+    const customer = body.customer || {
+      name: "Customer",
+      email: "customer@example.com",
+      phone: "9999999999",
+      addressLine1: "Address",
+      city: "City",
+      state: "State",
+      pincode: "110001",
+    };
+
+    const fullAddress = customer.fullAddress || 
+      `${customer.addressLine1}${customer.addressLine2 ? ', ' + customer.addressLine2 : ''}${customer.landmark ? ', Near ' + customer.landmark : ''}, ${customer.city}, ${customer.state} - ${customer.pincode}`;
+
     const newOrder = await Order.create({
       orderId,
       amount: Number(body.amount) || 0,
       currency: "INR",
       paymentMethod: body.paymentMethod || "cod",
       status: body.paymentMethod === "cod" ? "pending" : "paid",
-      customer: body.customer || {
-        name: "Amit Kumar",
-        email: "amit4321sg@gmail.com",
-        phone: "9876543210",
-        address: "123, Main Street, Hyderabad, Telangana - 500001",
+      items: body.items || [],
+      customer: {
+        ...customer,
+        fullAddress,
       },
     });
 
@@ -38,9 +50,42 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const orderId = searchParams.get("orderId");
+    const phone = searchParams.get("phone");
+
     await connectToDatabase();
+
+    if (orderId) {
+      const order = await Order.findOne({
+        $or: [
+          { orderId: orderId.trim() },
+          { razorpayOrderId: orderId.trim() },
+        ],
+      });
+
+      if (!order) {
+        return NextResponse.json(
+          { success: false, error: "Order not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ success: true, order });
+    }
+
+    if (phone) {
+      const cleanPhone = phone.replace(/\D/g, "");
+      const orders = await Order.find({
+        "customer.phone": { $regex: cleanPhone },
+      })
+        .sort({ createdAt: -1 })
+        .limit(10);
+
+      return NextResponse.json({ success: true, orders });
+    }
+
     const orders = await Order.find({}).sort({ createdAt: -1 }).limit(20);
     return NextResponse.json({ success: true, orders });
   } catch (error: any) {
