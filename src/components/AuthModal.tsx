@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { X, Sparkles, ShieldCheck, LogOut, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { X, Sparkles, ShieldCheck, LogOut, CheckCircle2, Truck, ArrowRight, Package } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 
@@ -11,6 +12,26 @@ export function AuthModal() {
   const googleBtnRef = useRef<HTMLDivElement>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [recentOrder, setRecentOrder] = useState<{
+    orderId: string;
+    amount: number;
+    status: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (isAuthModalOpen) {
+      try {
+        const stored = JSON.parse(
+          localStorage.getItem("shubhcoins_orders") || "[]"
+        );
+        if (stored.length > 0) {
+          setRecentOrder(stored[0]);
+        }
+      } catch (err) {
+        console.warn("Could not load recent order:", err);
+      }
+    }
+  }, [isAuthModalOpen]);
 
   useEffect(() => {
     if (!isAuthModalOpen || user) return;
@@ -116,27 +137,67 @@ export function AuthModal() {
                 <p className="text-xs text-[#6B6661] mt-0.5">{user.email}</p>
               </div>
 
-              <div className="p-3.5 bg-white rounded-2xl border border-[#EAE4D9] text-xs text-[#6B6661] space-y-1 text-left">
+              {/* Recent Order Card if available */}
+              {recentOrder && (
+                <div className="p-3 bg-[#FAF8F5] rounded-2xl border border-[#EAE4D9] text-left text-xs space-y-1.5 shadow-xs">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-[#6B6661] flex items-center gap-1 font-medium">
+                      <Package className="w-3.5 h-3.5 text-[#9A7D3E]" />
+                      <span>Latest Order</span>
+                    </span>
+                    <span className="font-mono font-bold text-[#1A1817]">
+                      {recentOrder.orderId}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-[11px] pt-1 border-t border-[#EAE4D9]/60">
+                    <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                      {recentOrder.status || "Confirmed"}
+                    </span>
+                    <span className="font-bold text-[#4A0D17]">₹{recentOrder.amount}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="p-3 bg-white rounded-2xl border border-[#EAE4D9] text-xs text-[#6B6661] space-y-1 text-left">
                 <div className="flex justify-between">
                   <span>Fast Checkout:</span>
                   <span className="font-semibold text-emerald-700">Enabled</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Order Tracking:</span>
-                  <span className="font-semibold text-[#1A1817]">Active</span>
+                  <span>Pan-India Delivery:</span>
+                  <span className="font-semibold text-[#1A1817]">BlueDart & Delhivery</span>
                 </div>
               </div>
 
-              <button
-                onClick={() => {
-                  logout();
-                  closeAuthModal();
-                }}
-                className="w-full py-2.5 px-4 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold flex items-center justify-center gap-2 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </button>
+              {/* Direct Action Buttons */}
+              <div className="space-y-2 pt-1">
+                <Link
+                  href={
+                    recentOrder
+                      ? `/track-order?orderId=${encodeURIComponent(recentOrder.orderId)}`
+                      : "/track-order"
+                  }
+                  onClick={closeAuthModal}
+                  className="w-full py-3 px-4 rounded-xl bg-[#4A0D17] hover:bg-[#32080F] text-white text-xs font-bold flex items-center justify-between shadow-md transition-all active:scale-95 group"
+                >
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-4 h-4 text-[#DFC278]" />
+                    <span>My Orders / Track Live Order</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-[#DFC278] group-hover:translate-x-1 transition-transform" />
+                </Link>
+
+                <button
+                  onClick={() => {
+                    logout();
+                    closeAuthModal();
+                  }}
+                  className="w-full py-2 px-4 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             </div>
           ) : (
             /* Login state */

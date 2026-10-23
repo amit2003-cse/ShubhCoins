@@ -12,6 +12,7 @@ import { FestiveBanner } from "@/components/FestiveBanner";
 import { BrandStory } from "@/components/BrandStory";
 import { GiftingOccasions } from "@/components/GiftingOccasions";
 import { MaterialTransparency } from "@/components/MaterialTransparency";
+import { CustomerReviews } from "@/components/CustomerReviews";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
@@ -138,9 +139,12 @@ export default function HomePage() {
 
         {/* 9. Product Quality & Material Transparency */}
         <MaterialTransparency />
+
+        {/* 10. Verified Customer Reviews & Testimonials */}
+        <CustomerReviews />
       </main>
 
-      {/* 10. Comprehensive Footer */}
+      {/* 11. Comprehensive Footer */}
       <Footer />
 
       {/* Interactive Cart Drawer */}
