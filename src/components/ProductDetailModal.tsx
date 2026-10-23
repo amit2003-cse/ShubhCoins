@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Product } from "@/types";
-import { X, Plus, Minus, ShoppingBag, ShieldCheck, Check, Truck, RotateCcw, Award } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, ShieldCheck, Check, Truck, RotateCcw, Award, ArrowRight } from "lucide-react";
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -218,6 +219,17 @@ export function ProductDetailModal({
                     <Truck className="w-3 h-3 text-[#9A7D3E]" />
                     <span>Cash on Delivery</span>
                   </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#F0EBE2]">
+                  <Link
+                    href={`/products/${product.id}`}
+                    onClick={onClose}
+                    className="w-full py-2 rounded-xl bg-[#FAF8F5] hover:bg-[#F0EBE2] border border-[#EAE4D9] text-[#4A0D17] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    <span>View Dedicated Product Page & Report</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               </div>
             </div>

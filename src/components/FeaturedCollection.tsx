@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Product } from "@/types";
 import { ArrowRight, ShoppingBag, Eye, Check } from "lucide-react";
 
@@ -139,14 +140,14 @@ export function FeaturedCollection({
                       )}
                     </button>
 
-                    {/* View Details Button */}
-                    <button
-                      onClick={() => onSelectProduct(product)}
+                    {/* View Details Link */}
+                    <Link
+                      href={`/products/${product.id}`}
                       className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#E8D9B5] hover:bg-[#DFC278] active:scale-95 text-[#2D060D] text-xs sm:text-sm font-bold shadow-sm transition-all"
                     >
                       <span>View Details</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
