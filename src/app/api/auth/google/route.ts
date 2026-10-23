@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { User } from "@/models/User";
+import { isAdminEmail } from "@/utils/admin";
 
 // Helper function to decode JWT payload safely without extra dependencies
 function decodeJwtPayload(token: string) {
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
         name: userName,
         email: userEmail,
         picture: userPicture,
+        isAdmin: isAdminEmail(userEmail),
       },
     });
   } catch (error: any) {

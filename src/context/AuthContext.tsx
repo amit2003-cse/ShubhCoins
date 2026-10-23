@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { isAdminEmail } from "@/utils/admin";
 
 export interface AuthUser {
   id: string;
@@ -8,6 +9,7 @@ export interface AuthUser {
   name: string;
   email: string;
   picture?: string;
+  isAdmin?: boolean;
 }
 
 interface AuthContextType {
@@ -16,7 +18,7 @@ interface AuthContextType {
   isAuthModalOpen: boolean;
   openAuthModal: () => void;
   closeAuthModal: () => void;
-  loginWithCredential: (credential: string) => Promise<boolean>;
+  loginWithCredential: (credential: string) => Promise<AuthUser | null>;
   logout: () => void;
 }
 
@@ -26,7 +28,7 @@ const AuthContext = createContext<AuthContextType>({
   isAuthModalOpen: false,
   openAuthModal: () => {},
   closeAuthModal: () => {},
-  loginWithCredential: async () => false,
+  loginWithCredential: async () => null,
   logout: () => {},
 });
 
@@ -40,7 +42,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = localStorage.getItem("shubhcoins_user");
       if (stored) {
-        setUser(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        parsed.isAdmin = isAdminEmail(parsed.email);
+        setUser(parsed);
+        if (parsed.isAdmin) {
+          sessionStorage.setItem("shubhcoins_admin_auth", "true");
+        }
       }
     } catch (e) {
       console.warn("Failed to parse stored user session:", e);
@@ -52,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const openAuthModal = () => setIsAuthModalOpen(true);
   const closeAuthModal = () => setIsAuthModalOpen(false);
 
-  const loginWithCredential = async (credential: string): Promise<boolean> => {
+  const loginWithCredential = async (credential: string): Promise<AuthUser | null> => {
     try {
       const res = await fetch("/api/auth/google", {
         method: "POST",
@@ -63,21 +70,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
 
       if (res.ok && data.success && data.user) {
-        setUser(data.user);
-        localStorage.setItem("shubhcoins_user", JSON.stringify(data.user));
+        const userObj: AuthUser = {
+          ...data.user,
+          isAdmin: isAdminEmail(data.user.email),
+        };
+
+        setUser(userObj);
+        localStorage.setItem("shubhcoins_user", JSON.stringify(userObj));
+
+        if (userObj.isAdmin) {
+          sessionStorage.setItem("shubhcoins_admin_auth", "true");
+        }
+
         closeAuthModal();
-        return true;
+        return userObj;
       }
-      return false;
+      return null;
     } catch (error) {
       console.error("Login failed:", error);
-      return false;
+      return null;
     }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("shubhcoins_user");
+    sessionStorage.removeItem("shubhcoins_admin_auth");
   };
 
   return (

@@ -2,11 +2,14 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { X, Sparkles, ShieldCheck, LogOut, CheckCircle2, Truck, ArrowRight, Package } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { isAdminEmail } from "@/utils/admin";
 import Image from "next/image";
 
 export function AuthModal() {
+  const router = useRouter();
   const { isAuthModalOpen, closeAuthModal, user, logout, loginWithCredential } =
     useAuth();
   const googleBtnRef = useRef<HTMLDivElement>(null);
@@ -50,9 +53,14 @@ export function AuthModal() {
               if (response.credential) {
                 setIsProcessing(true);
                 setAuthError(null);
-                const success = await loginWithCredential(response.credential);
+                const loggedInUser = await loginWithCredential(response.credential);
                 setIsProcessing(false);
-                if (!success) {
+                if (loggedInUser) {
+                  if (loggedInUser.isAdmin || isAdminEmail(loggedInUser.email)) {
+                    sessionStorage.setItem("shubhcoins_admin_auth", "true");
+                    router.push("/admin");
+                  }
+                } else {
                   setAuthError("Failed to sign in with Google. Please try again.");
                 }
               }
@@ -127,10 +135,17 @@ export function AuthModal() {
               </div>
 
               <div>
-                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full mb-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Google Account Linked</span>
-                </div>
+                {isAdminEmail(user.email) ? (
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#DFC278] bg-[#4A0D17] px-3 py-1 rounded-full mb-1 border border-[#C5A869]/40 shadow-xs">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#DFC278]" />
+                    <span>👑 Store Administrator</span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full mb-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Google Account Linked</span>
+                  </div>
+                )}
                 <h3 className="font-serif text-xl font-bold text-[#1A1817]">
                   {user.name}
                 </h3>
@@ -167,10 +182,30 @@ export function AuthModal() {
                   <span>Pan-India Delivery:</span>
                   <span className="font-semibold text-[#1A1817]">BlueDart & Delhivery</span>
                 </div>
+                {isAdminEmail(user.email) && (
+                  <div className="flex justify-between pt-1 border-t border-[#EAE4D9]/60 text-emerald-700 font-semibold">
+                    <span>Admin Clearance:</span>
+                    <span>Granted</span>
+                  </div>
+                )}
               </div>
 
               {/* Direct Action Buttons */}
               <div className="space-y-2 pt-1">
+                {isAdminEmail(user.email) && (
+                  <Link
+                    href="/admin"
+                    onClick={closeAuthModal}
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#4A0D17] via-[#5C101D] to-[#4A0D17] text-white text-xs font-bold flex items-center justify-between shadow-lg border border-[#DFC278]/40 hover:brightness-110 transition-all active:scale-95 group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-[#DFC278]" />
+                      <span>Open Admin Orders Dashboard</span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-[#DFC278] group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                )}
+
                 <Link
                   href={
                     recentOrder
@@ -178,13 +213,13 @@ export function AuthModal() {
                       : "/track-order"
                   }
                   onClick={closeAuthModal}
-                  className="w-full py-3 px-4 rounded-xl bg-[#4A0D17] hover:bg-[#32080F] text-white text-xs font-bold flex items-center justify-between shadow-md transition-all active:scale-95 group"
+                  className="w-full py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-[#1A1817] text-xs font-bold flex items-center justify-between border border-[#EAE4D9] shadow-xs transition-all active:scale-95 group"
                 >
                   <div className="flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-[#DFC278]" />
+                    <Truck className="w-4 h-4 text-[#9A7D3E]" />
                     <span>My Orders / Track Live Order</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-[#DFC278] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 text-[#9A7D3E] group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 <button

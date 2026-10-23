@@ -31,7 +31,10 @@ export interface IOrder extends Document {
   amount: number;
   currency: string;
   paymentMethod: "razorpay" | "cod";
-  status: "pending" | "paid" | "failed" | "confirmed" | "shipped" | "delivered";
+  status: "pending" | "paid" | "failed" | "confirmed" | "packed" | "shipped" | "delivered" | "cancelled";
+  courierName?: string;
+  trackingNumber?: string;
+  notes?: string;
   items: IOrderItem[];
   customer: ICustomer;
   createdAt: Date;
@@ -100,8 +103,18 @@ const OrderSchema: Schema<IOrder> = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "paid", "failed", "confirmed", "shipped", "delivered"],
+      enum: ["pending", "paid", "failed", "confirmed", "packed", "shipped", "delivered", "cancelled"],
       default: "pending",
+    },
+    courierName: {
+      type: String,
+      default: "BlueDart Express",
+    },
+    trackingNumber: {
+      type: String,
+    },
+    notes: {
+      type: String,
     },
     items: {
       type: [OrderItemSchema],

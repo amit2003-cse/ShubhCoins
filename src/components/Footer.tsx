@@ -159,6 +159,10 @@ export function Footer() {
             <span>UPI & Cards</span>
             <span>•</span>
             <span>COD Available</span>
+            <span>•</span>
+            <Link href="/admin" className="hover:text-[#DFC278] transition-colors underline">
+              Merchant Login
+            </Link>
           </div>
         </div>
       </div>
