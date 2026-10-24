@@ -18,8 +18,10 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
 import { SearchModal } from "@/components/SearchModal";
 import { CheckoutModal } from "@/components/CheckoutModal";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomePage() {
+  const { user, requireAuth } = useAuth();
   const [cartItems, setCartItems] = useState<CartItem[]>([
     // Start with 1 item preloaded (or empty) to match the screenshots feel
     { product: PRODUCTS[0], quantity: 1 },
@@ -159,8 +161,15 @@ export default function HomePage() {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
         onCheckout={() => {
-          setIsCartOpen(false);
-          setIsCheckoutOpen(true);
+          if (!user) {
+            requireAuth(() => {
+              setIsCartOpen(false);
+              setIsCheckoutOpen(true);
+            }, "Please sign in with Google to proceed with checkout.");
+          } else {
+            setIsCartOpen(false);
+            setIsCheckoutOpen(true);
+          }
         }}
       />
 

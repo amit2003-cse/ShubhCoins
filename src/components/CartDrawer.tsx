@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { CartItem } from "@/types";
+import { useAuth } from "@/context/AuthContext";
 import {
   X,
   Plus,
@@ -42,6 +43,7 @@ export function CartDrawer({
   onRemoveItem,
   onCheckout,
 }: CartDrawerProps) {
+  const { user, requireAuth } = useAuth();
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState<string | null>(null);
   const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
@@ -314,7 +316,15 @@ export function CartDrawer({
 
               {/* Checkout Button */}
               <button
-                onClick={onCheckout}
+                onClick={() => {
+                  if (!user) {
+                    requireAuth(() => {
+                      onCheckout();
+                    }, "Please sign in with Google to proceed to checkout and track your festive order.");
+                  } else {
+                    onCheckout();
+                  }
+                }}
                 className="w-full py-3.5 px-6 rounded-xl bg-[#4A0D17] hover:bg-[#32080F] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all"
               >
                 <span>Proceed to Checkout</span>

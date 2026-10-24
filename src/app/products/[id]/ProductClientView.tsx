@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { SearchModal } from "@/components/SearchModal";
+import { useAuth } from "@/context/AuthContext";
 import {
   ShieldCheck,
   Truck,
@@ -35,6 +36,7 @@ export function ProductClientView({
   product,
   allProducts,
 }: ProductClientViewProps) {
+  const { user, requireAuth } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState<CartItem[]>([
     { product: product, quantity: 1 },
@@ -86,8 +88,15 @@ export function ProductClientView({
   };
 
   const handleBuyNow = () => {
-    setCartItems([{ product, quantity }]);
-    setIsCheckoutOpen(true);
+    if (!user) {
+      requireAuth(() => {
+        setCartItems([{ product, quantity }]);
+        setIsCheckoutOpen(true);
+      }, "Please sign in with Google to complete your purchase.");
+    } else {
+      setCartItems([{ product, quantity }]);
+      setIsCheckoutOpen(true);
+    }
   };
 
   const handleUpdateQuantity = (productId: string, qty: number) => {
@@ -421,8 +430,15 @@ export function ProductClientView({
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
         onCheckout={() => {
-          setIsCartOpen(false);
-          setIsCheckoutOpen(true);
+          if (!user) {
+            requireAuth(() => {
+              setIsCartOpen(false);
+              setIsCheckoutOpen(true);
+            }, "Please sign in with Google to proceed with checkout.");
+          } else {
+            setIsCartOpen(false);
+            setIsCheckoutOpen(true);
+          }
         }}
       />
 

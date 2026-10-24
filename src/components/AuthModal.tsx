@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export function AuthModal() {
   const router = useRouter();
-  const { isAuthModalOpen, closeAuthModal, user, logout, loginWithCredential } =
+  const { isAuthModalOpen, closeAuthModal, user, logout, loginWithCredential, authModalReason } =
     useAuth();
   const googleBtnRef = useRef<HTMLDivElement>(null);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -53,10 +53,12 @@ export function AuthModal() {
               if (response.credential) {
                 setIsProcessing(true);
                 setAuthError(null);
+                const hadCheckoutReason = Boolean(authModalReason);
                 const loggedInUser = await loginWithCredential(response.credential);
                 setIsProcessing(false);
                 if (loggedInUser) {
-                  if (loggedInUser.isAdmin || isAdminEmail(loggedInUser.email)) {
+                  // Only auto-redirect to admin if not in the middle of a checkout flow
+                  if (!hadCheckoutReason && (loggedInUser.isAdmin || isAdminEmail(loggedInUser.email))) {
                     sessionStorage.setItem("shubhcoins_admin_auth", "true");
                     router.push("/admin");
                   }
@@ -252,6 +254,22 @@ export function AuthModal() {
                   Log in to track your festive coin orders, save delivery addresses, and enjoy fast 1-click checkout.
                 </p>
               </div>
+
+              {authModalReason && (
+                <div className="p-3.5 bg-[#4A0D17]/5 border border-[#4A0D17]/15 rounded-2xl flex items-center gap-3 text-left shadow-xs">
+                  <div className="w-8 h-8 rounded-xl bg-[#4A0D17] text-[#DFC278] flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[#4A0D17]">
+                      Checkout Sign-In Required
+                    </p>
+                    <p className="text-[11px] text-[#6B6661] mt-0.5">
+                      {authModalReason}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {authError && (
                 <div className="p-3 bg-red-50 text-red-700 text-xs rounded-xl border border-red-200">

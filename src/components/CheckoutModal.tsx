@@ -39,7 +39,7 @@ export function CheckoutModal({
   appliedCoupon,
   onClearCart,
 }: CheckoutModalProps) {
-  const { user } = useAuth();
+  const { user, openAuthModal, requireAuth } = useAuth();
 
   const [step, setStep] = useState<"address" | "payment" | "success">("address");
   const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "cod">("razorpay");
@@ -125,6 +125,10 @@ export function CheckoutModal({
 
   const handleContinueToPayment = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      openAuthModal("Please sign in with Google to proceed with checkout.");
+      return;
+    }
     if (validateAddress()) {
       setStep("payment");
     }
@@ -406,6 +410,55 @@ export function CheckoutModal({
                   Enclosed in luxury velvet gift packaging with insured Pan-India transit.
                 </p>
               </div>
+
+              {/* Google Verified Customer Status */}
+              {user ? (
+                <div className="flex items-center justify-between p-3 bg-white rounded-2xl border border-[#EAE4D9] shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    {user.picture ? (
+                      <img
+                        src={user.picture}
+                        alt={user.name}
+                        referrerPolicy="no-referrer"
+                        className="w-8 h-8 rounded-full object-cover border border-[#C5A869]"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-[#4A0D17] text-[#DFC278] text-xs flex items-center justify-center font-bold">
+                        {user.name.charAt(0)}
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs font-bold text-[#1A1817] flex items-center gap-1.5">
+                        <span>{user.name}</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      </p>
+                      <p className="text-[11px] text-[#6B6661]">{user.email}</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                    Google Verified
+                  </span>
+                </div>
+              ) : (
+                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-between shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-[#4A0D17] text-[#DFC278] flex items-center justify-center font-bold">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#1A1817]">Sign In with Google Required</p>
+                      <p className="text-[11px] text-[#6B6661]">Please sign in with Google to complete your order</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openAuthModal("Sign in with Google to complete your order.")}
+                    className="px-3.5 py-1.5 bg-[#4A0D17] hover:bg-[#32080F] text-white text-xs font-bold rounded-xl transition-colors shadow-xs"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              )}
 
               {/* Form Fields */}
               <div className="space-y-3.5">

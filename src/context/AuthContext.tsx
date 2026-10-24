@@ -16,8 +16,10 @@ interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthModalOpen: boolean;
-  openAuthModal: () => void;
+  authModalReason: string | null;
+  openAuthModal: (reason?: string | unknown) => void;
   closeAuthModal: () => void;
+  requireAuth: (callback: () => void, reason?: string) => void;
   loginWithCredential: (credential: string) => Promise<AuthUser | null>;
   logout: () => void;
 }
@@ -26,8 +28,10 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   isAuthModalOpen: false,
+  authModalReason: null,
   openAuthModal: () => {},
   closeAuthModal: () => {},
+  requireAuth: () => {},
   loginWithCredential: async () => null,
   logout: () => {},
 });
@@ -36,6 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalReason, setAuthModalReason] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
   // Restore session from localStorage on initial load
   useEffect(() => {
@@ -56,8 +62,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const openAuthModal = () => setIsAuthModalOpen(true);
-  const closeAuthModal = () => setIsAuthModalOpen(false);
+  const openAuthModal = (reason?: string | unknown) => {
+    setAuthModalReason(typeof reason === "string" ? reason : null);
+    setIsAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+    setAuthModalReason(null);
+    setPendingAction(null);
+  };
+
+  const requireAuth = (callback: () => void, reason?: string) => {
+    if (user) {
+      callback();
+    } else {
+      setPendingAction(() => callback);
+      setAuthModalReason(
+        reason || "Please sign in with Google to proceed to checkout."
+      );
+      setIsAuthModalOpen(true);
+    }
+  };
 
   const loginWithCredential = async (credential: string): Promise<AuthUser | null> => {
     try {
@@ -82,7 +108,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           sessionStorage.setItem("shubhcoins_admin_auth", "true");
         }
 
-        closeAuthModal();
+        const callbackToRun = pendingAction;
+        setIsAuthModalOpen(false);
+        setAuthModalReason(null);
+        setPendingAction(null);
+
+        if (callbackToRun) {
+          callbackToRun();
+        }
+
         return userObj;
       }
       return null;
@@ -104,8 +138,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         isAuthModalOpen,
+        authModalReason,
         openAuthModal,
         closeAuthModal,
+        requireAuth,
         loginWithCredential,
         logout,
       }}

@@ -43,8 +43,17 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Order creation error:", error);
+    let errorMessage = error.message || "Failed to create order";
+    if (
+      typeof errorMessage === "string" &&
+      (errorMessage.includes("bad auth") ||
+        errorMessage.toLowerCase().includes("authentication failed"))
+    ) {
+      errorMessage =
+        "MongoDB authentication failed. Please verify that your MongoDB Atlas database user and password in MONGODB_URI match your Atlas Database Access credentials.";
+    }
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to create order" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
