@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { SearchModal } from "@/components/SearchModal";
+import { ExitIntentModal } from "@/components/ExitIntentModal";
 import { useAuth } from "@/context/AuthContext";
 import {
   ShieldCheck,
@@ -51,6 +52,7 @@ export function ProductClientView({
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
     discountPercent: number;
+    fixedDiscount?: number;
   } | null>({ code: "NEWSHUBH", discountPercent: 10 });
 
   const handleApplyCoupon = (code: string) => {
@@ -62,9 +64,16 @@ export function ProductClientView({
         message: "Code NEWSHUBH applied! 10% festive discount activated.",
       };
     }
+    if (clean === "DIWALI50" || clean === "FESTIVE50") {
+      setAppliedCoupon({ code: clean, discountPercent: 0, fixedDiscount: 50 });
+      return {
+        success: true,
+        message: "Code DIWALI50 applied! ₹50 extra festive discount activated.",
+      };
+    }
     return {
       success: false,
-      message: "Invalid code. Use code NEWSHUBH to get 10% off!",
+      message: "Invalid code. Use code NEWSHUBH or DIWALI50!",
     };
   };
 
@@ -121,7 +130,9 @@ export function ProductClientView({
     0
   );
   const discountAmount = appliedCoupon
-    ? Math.round(subtotal * (appliedCoupon.discountPercent / 100))
+    ? appliedCoupon.fixedDiscount
+      ? appliedCoupon.fixedDiscount
+      : Math.round(subtotal * (appliedCoupon.discountPercent / 100))
     : 0;
   const shipping = subtotal > 0 ? (subtotal >= 650 ? 0 : 50) : 0;
   const totalAmount = subtotal > 0 ? Math.max(0, subtotal - discountAmount + shipping) : 0;
@@ -460,6 +471,15 @@ export function ProductClientView({
         discountAmount={discountAmount}
         appliedCoupon={appliedCoupon?.code}
         onClearCart={handleClearCart}
+      />
+
+      {/* Exit-Intent Festive Recovery Modal */}
+      <ExitIntentModal
+        hasItemsInCart={cartItems.length > 0 && !isCheckoutOpen}
+        onClaimDiscount={(code) => {
+          handleApplyCoupon(code);
+          setIsCartOpen(true);
+        }}
       />
     </div>
   );
