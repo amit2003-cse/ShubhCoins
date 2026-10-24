@@ -95,7 +95,7 @@ export default function HomePage() {
   const discountAmount = appliedCoupon
     ? Math.round(subtotal * (appliedCoupon.discountPercent / 100))
     : 0;
-  const shipping = subtotal > 0 ? 50 : 0;
+  const shipping = subtotal > 0 ? (subtotal >= 650 ? 0 : 50) : 0;
   const totalAmount = subtotal > 0 ? Math.max(0, subtotal - discountAmount + shipping) : 0;
 
   return (
@@ -160,6 +160,7 @@ export default function HomePage() {
         onRemoveCoupon={handleRemoveCoupon}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+        onAddToCart={(product, quantity) => handleAddToCart(product, quantity || 1)}
         onCheckout={() => {
           if (!user) {
             requireAuth(() => {

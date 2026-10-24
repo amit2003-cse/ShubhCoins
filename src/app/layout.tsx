@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { AuthModal } from "@/components/AuthModal";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { SocialProofToast } from "@/components/SocialProofToast";
 
 export const metadata: Metadata = {
   title: "ShubhCoins | Gift Prosperity - Premium Decorative Coins",
@@ -44,6 +45,7 @@ export default function RootLayout({
           {children}
           <AuthModal />
           <WhatsAppButton />
+          <SocialProofToast />
         </AuthProvider>
 
         {/* Razorpay Checkout SDK */}

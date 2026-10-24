@@ -15,9 +15,11 @@ import {
   Gift,
   Truck,
   Edit2,
+  Clock,
 } from "lucide-react";
 import { loadRazorpayScript } from "@/utils/razorpay";
 import { useAuth } from "@/context/AuthContext";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { CartItem, ShippingAddress } from "@/types";
 
 interface CheckoutModalProps {
@@ -40,6 +42,11 @@ export function CheckoutModal({
   onClearCart,
 }: CheckoutModalProps) {
   const { user, openAuthModal, requireAuth } = useAuth();
+  const paymentTimer = useCountdownTimer({
+    storageKey: "shubhcoins_payment_timer",
+    initialMinutes: 10,
+    autoResetOnExpire: true,
+  });
 
   const [step, setStep] = useState<"address" | "payment" | "success">("address");
   const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "cod">("razorpay");
@@ -769,11 +776,24 @@ export function CheckoutModal({
                   ))}
                 </div>
                 {discountAmount > 0 && (
-                  <div className="flex items-center justify-between text-xs text-emerald-700 font-semibold pt-2 border-t border-stone-200">
+                  <div className="flex items-center justify-between text-xs text-emerald-700 font-semibold pt-1.5 border-t border-stone-200">
                     <span>Festive Discount ({appliedCoupon || "NEWSHUBH"} - 10%)</span>
                     <span>-₹{discountAmount}</span>
                   </div>
                 )}
+                <div className="flex items-center justify-between text-xs pt-1.5 border-t border-stone-200">
+                  <span className="text-stone-500">Express Delivery (Pan-India)</span>
+                  {items.reduce((s, i) => s + i.product.price * i.quantity, 0) >= 650 ? (
+                    <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                      <span className="line-through text-stone-400 font-normal">₹50</span>
+                      <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.2 rounded">
+                        FREE
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-[#1A1817] font-semibold">₹50</span>
+                  )}
+                </div>
               </div>
 
               {/* Error Banner */}
@@ -786,6 +806,31 @@ export function CheckoutModal({
 
               {/* Payment Methods */}
               <div className="space-y-3">
+                {/* Online Payment Urgency / Anti-COD Priority Card */}
+                <div className="p-3 bg-gradient-to-r from-emerald-50 via-amber-50/60 to-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-between text-xs shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[#1A1817] text-[11px] flex items-center gap-1.5">
+                        <span>Online Payment Priority Perk</span>
+                        <span className="text-[10px] bg-emerald-700 text-white font-bold px-1.5 py-0.2 rounded">
+                          Priority Transit
+                        </span>
+                      </p>
+                      <p className="text-[10px] text-emerald-800 mt-0.5">
+                        Complete payment via UPI / Card in <span className="font-mono font-bold text-[#4A0D17]">{paymentTimer.isMounted ? paymentTimer.formatted : "09:59"}</span> for Free Express Dispatch!
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white/95 border border-emerald-300 px-2.5 py-1 rounded-xl shadow-2xs text-center shrink-0 ml-2">
+                    <span className="font-mono font-bold text-emerald-800 text-xs block">
+                      {paymentTimer.isMounted ? paymentTimer.formatted : "09:59"}
+                    </span>
+                  </div>
+                </div>
+
                 {/* Razorpay Option */}
                 <label
                   onClick={() => setPaymentMethod("razorpay")}
@@ -810,8 +855,8 @@ export function CheckoutModal({
                           Razorpay Standard Checkout
                         </span>
                       </div>
-                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                        Fast & Secure
+                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">
+                        ★ Recommended • Priority
                       </span>
                     </div>
                     <p className="text-[11px] text-[#6B6661] mt-1">
@@ -836,11 +881,16 @@ export function CheckoutModal({
                     onChange={() => setPaymentMethod("cod")}
                     className="mt-1 text-[#4A0D17]"
                   />
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-[#9A7D3E]" />
-                      <span className="font-bold text-xs sm:text-sm text-[#1A1817]">
-                        Cash on Delivery (COD)
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-[#9A7D3E]" />
+                        <span className="font-bold text-xs sm:text-sm text-[#1A1817]">
+                          Cash on Delivery (COD)
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-stone-500 bg-stone-100 px-2 py-0.5 rounded">
+                        Standard Transit
                       </span>
                     </div>
                     <p className="text-[11px] text-[#6B6661] mt-1">
