@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,6 +37,24 @@ export async function POST(req: NextRequest) {
         fullAddress,
       },
     });
+
+    // Send confirmation email asynchronously via Brevo
+    if (customer.email && customer.email.includes("@")) {
+      sendOrderConfirmationEmail({
+        orderId,
+        customerName: customer.name || "Valued Patron",
+        customerEmail: customer.email,
+        customerPhone: customer.phone,
+        shippingAddress: fullAddress,
+        giftMessage: customer.giftMessage,
+        paymentMethod: body.paymentMethod === "cod" ? "Cash on Delivery (COD)" : "Prepaid Online",
+        amount: Number(body.amount) || 0,
+        items: body.items || [],
+        orderDate: new Date().toISOString(),
+      }).catch((emailErr) => {
+        console.warn("Async order email sending error:", emailErr);
+      });
+    }
 
     return NextResponse.json({
       success: true,

@@ -28,7 +28,7 @@ export function CustomerReviews() {
       coinType: "gold",
       rating: 5,
       date: "October 2026",
-      text: "Such a breath of fresh air! The clean secular design with zero deity engravings makes them universally welcome. The weight in hand feels surprisingly solid and heavy. Also used coupon NEWSHUBH for 10% discount!",
+      text: "Such a breathtaking piece! The embossed Goddess Lakshmi design on the blooming lotus is deeply detailed and divine. The weight in hand feels surprisingly solid and heavy. Also used coupon NEWSHUBH for 10% discount!",
       verified: true,
     },
     {

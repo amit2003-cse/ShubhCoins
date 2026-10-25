@@ -13,8 +13,8 @@ export function Footer() {
       a: "No. In complete transparency, ShubhCoins sells decorative keepsake metal coins crafted with heavyweight zinc-brass alloy cores and finished in multi-layer 24K gold-tone and sterling silver-tone electroplating. They are intended for decorative gifting and ceremonial memories, not bullion investment.",
     },
     {
-      q: "Do the coins have deity images or religious engravings?",
-      a: "No. Our coins feature a clean, minimalist mirror polish face with reeded edges and zero deity engravings or religious figures. This makes them universally welcoming for all friends, family, and corporate recipients.",
+      q: "What engraving is featured on the coins?",
+      a: "Our coins feature an intricately crafted high-relief embossed print of Goddess Lakshmi seated on a sacred blooming lotus flower, holding lotus blossoms and showering golden coins of prosperity, bordered by an ornate floral mandala rim.",
     },
     {
       q: "What packaging is included?",

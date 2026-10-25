@@ -121,7 +121,7 @@ export function ProductDetailModal({
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#C5A869]" />
-                    <span>Plain Mirror Surface (Zero Deity Engravings)</span>
+                    <span>Embossed Goddess Lakshmi on Lotus</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#C5A869]" />

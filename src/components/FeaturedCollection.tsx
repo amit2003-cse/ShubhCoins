@@ -37,8 +37,8 @@ export function FeaturedCollection({
           Our Collection
         </h2>
         <p className="text-xs sm:text-sm text-[#6B6661] leading-relaxed">
-          Clean, mirror-polished decorative keepsake coins with zero deity engravings. 
-          Universal gifts designed to celebrate prosperity and warmth.
+          Exquisite, mirror-polished commemorative keepsake coins featuring divine Goddess Lakshmi embossed designs. 
+          The perfect auspicious gift to celebrate prosperity, Diwali, weddings, and new beginnings.
         </p>
       </div>
 

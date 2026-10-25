@@ -24,6 +24,7 @@ import {
   AlertCircle,
   Eye,
   ChevronDown,
+  Mail,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { isAdminEmail } from "@/utils/admin";
@@ -75,6 +76,7 @@ export default function AdminDashboardPage() {
   const [paymentFilter, setPaymentFilter] = useState("all");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+  const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
 
   // AWB editing state map: orderId -> trackingNumber
   const [awbInputs, setAwbInputs] = useState<Record<string, string>>({});
@@ -250,6 +252,51 @@ export default function AdminDashboardPage() {
       )
     );
     setUpdatingId(null);
+  };
+
+  // Re-send / Send Order Confirmation Email via Brevo
+  const handleSendEmail = async (ord: AdminOrder) => {
+    if (!ord.customer?.email) {
+      alert("Customer email address is not recorded for this order.");
+      return;
+    }
+
+    setSendingEmailId(ord.orderId);
+    try {
+      const res = await fetch("/api/send-order-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: ord.orderId,
+          customerName: ord.customer.name,
+          customerEmail: ord.customer.email,
+          customerPhone: ord.customer.phone,
+          shippingAddress: ord.customer.fullAddress,
+          giftMessage: ord.customer.giftMessage,
+          paymentMethod: ord.paymentMethod?.includes("cod")
+            ? "Cash on Delivery (COD)"
+            : "Prepaid Online (Razorpay)",
+          amount: ord.amount,
+          items: ord.items,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setNotification(`Confirmation email sent to ${ord.customer.email}!`);
+      } else {
+        alert(
+          data.error ||
+            "Failed to send email. Please check Brevo IP authorization or credentials."
+        );
+      }
+    } catch (e: any) {
+      console.warn("Email trigger error:", e);
+      alert(e.message || "Failed to trigger email");
+    } finally {
+      setSendingEmailId(null);
+      setTimeout(() => setNotification(null), 3500);
+    }
   };
 
   // Calculate Metrics
@@ -688,16 +735,31 @@ export default function AdminDashboardPage() {
 
                       <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-[#6B6661]">
                         <span>Velvet Presentation Case Included</span>
-                        <Link
-                          href={`/order-success?orderId=${encodeURIComponent(
-                            ord.orderId
-                          )}`}
-                          target="_blank"
-                          className="font-bold text-[#4A0D17] hover:underline flex items-center gap-1"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>View Packing Receipt</span>
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleSendEmail(ord)}
+                            disabled={sendingEmailId === ord.orderId}
+                            className="font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 hover:underline"
+                            title="Send or Re-send Order Confirmation Email to customer"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>
+                              {sendingEmailId === ord.orderId
+                                ? "Sending..."
+                                : "Send Email"}
+                            </span>
+                          </button>
+                          <Link
+                            href={`/order-success?orderId=${encodeURIComponent(
+                              ord.orderId
+                            )}`}
+                            target="_blank"
+                            className="font-bold text-[#4A0D17] hover:underline flex items-center gap-1"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Receipt</span>
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>

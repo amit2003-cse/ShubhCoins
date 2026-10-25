@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
     // Update order status in MongoDB
     try {
       await connectToDatabase();
-      await Order.findOneAndUpdate(
+      const updatedOrder = await Order.findOneAndUpdate(
         { razorpayOrderId: razorpay_order_id },
         {
           status: "paid",
@@ -60,6 +61,26 @@ export async function POST(req: NextRequest) {
         },
         { new: true }
       );
+
+      // Send confirmation email asynchronously via Brevo
+      if (updatedOrder && updatedOrder.customer?.email) {
+        sendOrderConfirmationEmail({
+          orderId: updatedOrder.orderId || razorpay_order_id,
+          customerName: updatedOrder.customer.name || "Valued Patron",
+          customerEmail: updatedOrder.customer.email,
+          customerPhone: updatedOrder.customer.phone,
+          shippingAddress: updatedOrder.customer.fullAddress || "",
+          giftMessage: updatedOrder.customer.giftMessage,
+          paymentMethod: "Razorpay (Online Paid)",
+          amount: updatedOrder.amount,
+          items: updatedOrder.items || [],
+          orderDate: updatedOrder.createdAt
+            ? new Date(updatedOrder.createdAt).toISOString()
+            : new Date().toISOString(),
+        }).catch((emailErr) => {
+          console.warn("Async email sending error after payment:", emailErr);
+        });
+      }
     } catch (dbErr) {
       console.warn("MongoDB order update error (non-fatal):", dbErr);
     }

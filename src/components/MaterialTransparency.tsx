@@ -17,8 +17,8 @@ export function MaterialTransparency() {
     },
     {
       feature: "Face & Design Motif",
-      detail: "Clean Minimalist Mirror Polish",
-      note: "Plain reflective surface with reeded rim. Zero deity figures, religious illustrations, or facial engravings.",
+      detail: "Embossed Divine Goddess Lakshmi",
+      note: "High-relief embossed Goddess Lakshmi seated on a lotus, showering prosperity coins with an ornate floral mandala border and milled rim.",
     },
     {
       feature: "Diameter & Thickness",

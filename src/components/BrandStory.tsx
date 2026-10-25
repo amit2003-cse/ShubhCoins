@@ -7,9 +7,9 @@ export function BrandStory() {
   const pillars = [
     {
       icon: Sparkles,
-      title: "Universal & Secular Design",
+      title: "Divine Auspicious Design",
       description:
-        "Clean, mirror-polished plain finish with zero deity illustrations or religious imagery — making it a welcoming gift for everyone.",
+        "High-relief embossed Goddess Lakshmi engraving seated on a lotus — symbolizing abundance, divine blessings, and prosperity for every home.",
     },
     {
       icon: Shield,

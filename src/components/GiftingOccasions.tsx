@@ -41,7 +41,7 @@ export function GiftingOccasions() {
           Perfect for Every Auspicious Moment
         </h2>
         <p className="text-xs sm:text-sm text-[#6B6661]">
-          Designed without deity iconography, making them versatile tokens welcomed across all occasions.
+          Blessed with auspicious Goddess Lakshmi engravings, making them cherished tokens of prosperity across all celebrations.
         </p>
       </div>
 

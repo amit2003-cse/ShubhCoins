@@ -22,13 +22,13 @@ export function HeroSection({ onExploreClick }: HeroSectionProps) {
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-[#C5A869]/40 text-[#DFC278] text-xs font-medium tracking-wide">
               <Sparkles className="w-3.5 h-3.5 text-[#DFC278]" />
-              <span>Festive Edition 2026 • Plain Secular Design</span>
+              <span>Festive Edition 2026 • Goddess Lakshmi Collection</span>
             </div>
 
             {/* Headlines */}
             <div className="space-y-1 sm:space-y-2">
               <span className="block font-serif italic text-2xl sm:text-3xl text-[#DFC278] font-normal">
-                This Diwali
+                This Diwali & Festive Season
               </span>
               <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#FAF8F5] leading-tight">
                 Gift Happiness, <br />
@@ -38,8 +38,7 @@ export function HeroSection({ onExploreClick }: HeroSectionProps) {
 
             {/* Subtext */}
             <p className="text-sm sm:text-base text-[#FAF8F5]/85 max-w-lg mx-auto lg:mx-0 leading-relaxed font-normal">
-              High-luster Gold & Silver-finish decorative coins in handcrafted royal velvet gift cases. 
-              Minimalist mirror finish with zero deity engravings for versatile, secular festive gifting.
+              High-luster Gold & Silver-finish commemorative coins with embossed Goddess Lakshmi engravings in handcrafted royal velvet gift cases. The ultimate symbol of divine blessings and auspicious gifting.
             </p>
 
             {/* Quick Reassurances */}
